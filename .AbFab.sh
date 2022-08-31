@@ -27,6 +27,7 @@ export AbFab_ANIMAL_FRIENDS=5
 export AbFab_ANIMAL_FRIENDS_MIN=2
 export AbFab_ANIMAL_FRIENDS_MAX=14
 export AbFab_ANIMAL_HERD="false"
+export AbFab_ANIMAL_PARADE="random"  # none || cycle || random 
 # AbFab_ANIMAL_SET_FRIENDS 3
 export AbFab_ANIMAL_SELECT=0  # Set to 0 for random
 export AbFab_ANIMALS=🐒🦍🐕🐩🐈🐅🐆🐴🐎🦄🦓🦌🐂🐃🐄🐖🐗🐏🐑🐐🐪🐫🦙🦒🐘🦏🦛🐁🐀🐇🐿🦔🦇🦘🦡🦃🐔🐓🐣🐤🐥🐦🐧🕊🦅🦆🦢🦉🦚🦜🐊🐢🦎🐍🐲🐉🦕🦖🐳🐋🐬🐟🐠🐡🦈🐙🐚🦀🦞🦐🦑🐌🦋🐛🐜🐝🐞🦗🕷🦂
@@ -339,6 +340,14 @@ function get_abfab_animals() {
   AbFab_fn_SHOW_ANIMAL_FRIENDS_RETURN "$(get_random)"
 }
 
+function get_animals_rev() {
+  AbFab_fn_ANIMALS "$@" | rev
+}
+
+function get_animals_fwd() {
+  AbFab_fn_ANIMALS "$@"
+}
+
 precmd_functions+=('__prompt_command')
 # precmd_functions=('__prompt_command' "${precmd_functions[@]}")  # this is to prepend
 AbFab_COLORIZE='__abfab'
@@ -372,7 +381,7 @@ PS1=$(get_prev_result)
 # PS1+=' $(eval "$AbFab_COLORIZE" <<<$(parse_git_set_info))'
 
 #Single Rainbow with blinking colons
-PS1+='$(eval "$AbFab_COLORIZE" <<< "$(AbFab_fn_ANIMALS | rev)$(get_date_blink_colon)$(AbFab_fn_ANIMALS)$(parse_git_set_info)($(print -P "%~"))!>")'
+PS1+='$(eval "$AbFab_COLORIZE" <<< "$(get_animals_rev)$(get_date_blink_colon)$(get_animals_fwd)$(parse_git_set_info)($(print -P "%~"))!>")'
 
 __remove_newline() {
   tr -d '\n'
@@ -405,6 +414,17 @@ TRAPALRM () {
     fi
   else
     unset screen_saver_on
+  fi
+  if [[ "$AbFab_ANIMAL_HERD" = "false" ]]; then
+    if [[ "$AbFab_ANIMAL_PARADE" = "random" ]]; then
+      get_animals_fwd "" > /dev/null 2>&1  # |& /dev/null
+    else
+      if [[ "$AbFab_ANIMAL_PARADE" = "rotate" ]]; then
+        #TODO add animal and remove
+        #ABFab_fn_rotate
+        echo "" > /dev/null 2>&1
+      fi
+    fi
   fi
   zle reset-prompt
 }

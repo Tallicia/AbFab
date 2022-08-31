@@ -3,10 +3,10 @@
 #shellcheck disable=SC2016,SC1083,SC1090,SC2116,SC2154
 
 export AbFab_SCREENSAVER_SELECT=0
-export AbFab_SCREENSAVER_IDLE_TIME=45
-export AbFab_SCREENSAVER_NOTICE_TIME=5
+export AbFab_SCREENSAVER_IDLE_TIME=25
+export AbFab_SCREENSAVER_NOTICE_TIME=2
 # declare -a AbFab_SCREEN_SAVER_LIST
-export AbFab_SCREENSAVER_CYCLE_TIME=0
+export AbFab_SCREENSAVER_TIMEOUT=20
 export AbFab_SCREEN_SAVER_LIST=("cmatrix -bu 4 -a | lolcat -F 0.00015" 
 "cmatrix -bu 4 -a | lolcat -F 0.0005" 
 "cmatrix -bu 4 -a" 
@@ -180,7 +180,7 @@ AbFab_fn_SHOW_ALL_ANIMAL_NUMBERS() {
   do
     out+="$x ${AbFab_ANIMAL_ARRAY[$x]} "
   done
-  echo "$out" | AbFab_fn_RAINBOW
+  echo "$out" | AbFab_fn_RAINBOW_INC
 }
 
 AbFab_fn_SHOW_ALL_ANIMALS() {
@@ -189,7 +189,7 @@ AbFab_fn_SHOW_ALL_ANIMALS() {
 
 AbFab_fn_SHOW_ANIMAL() {
   if [[ $1 -gt 0 ]]; then
-    echo "$1 is ${AbFab_ANIMAL_ARRAY[$1]}" | AbFab_fn_RAINBOW
+    echo "$1 is ${AbFab_ANIMAL_ARRAY[$1]}" | AbFab_fn_RAINBOW_INC
   else
     echo "Please enter a number to see that animal, but here they all are."
     AbFab_SHOW_ALL_ANIMAL_NUMBERS "$@"
@@ -263,23 +263,38 @@ AbFab_fn_COUNTDOWN () {
 }
 
 AbFab_fn_SCREENSAVER() {
-  screen_saver_on="true"
-  ind=$1
-  if [[ $1 -eq 0 ]]; then
-    printf "\nRandomly selecting screen saver. Iteractively, provide a number to choose specific screensaver.\n" | AbFab_fn_RAINBOW_INC
-    ind=$((RANDOM % ${#AbFab_SCREEN_SAVER_LIST[@]} + 1))
-  fi
-  chosen=${AbFab_SCREEN_SAVER_LIST[ind]}
-  echo "$(get_date) Starting the chosen one: ${chosen}" | AbFab_fn_RAINBOW_INC
-  #sleep $AbFab_SCREENSAVER_NOTICE_TIME
-  AbFab_fn_COUNTDOWN $AbFab_SCREENSAVER_NOTICE_TIME
-  #timeout --preserve-status --kill-after=$AbFab_SCREENSAVER_NOTICE_TIME > nul
-  AbFab_fn_START_TITLE "$chosen"
-  AbFab_fn_START_EXEC
-  eval "${chosen}"
-  # echo "$(get_date) '-' Screensaver exited." | AbFab_fn_RAINBOW_INC
-  AbFab_fn_DURATION
-  START=$SECONDS+$AbFab_SCREENSAVER_IDLE_TIME
+  prev_scr=124
+  while [[ "$prev_scr" -eq 124 ]]; do
+    screen_saver_on="true"
+    ind=$1
+    timeout=$2
+    if [[ "$ind" -eq 0 ]]; then
+      printf "\nRandomly selecting screen saver. Iteractively, provide a number to choose specific screensaver.\n" | AbFab_fn_RAINBOW_INC
+      ind=$((RANDOM % ${#AbFab_SCREEN_SAVER_LIST[@]} + 1))
+    fi
+    chosen=${AbFab_SCREEN_SAVER_LIST[$ind]}
+    echo "$(get_date) Starting the chosen one: ${chosen}" | AbFab_fn_RAINBOW_INC
+    #sleep $AbFab_SCREENSAVER_NOTICE_TIME
+    AbFab_fn_COUNTDOWN $AbFab_SCREENSAVER_NOTICE_TIME
+    AbFab_fn_START_TITLE "$chosen"
+    AbFab_fn_START_EXEC
+    #TODO Add pre show screen saver option 
+    if [[ "$timeout" -eq 0 ]]; then
+      eval "$chosen"
+    else
+      timeout_cmd="timeout $timeout"
+      timeout_cmd+="s"
+      timeout_cmd+=" $chosen"
+      # echo "$timeout_cmd"
+      eval "$timeout_cmd"
+      prev_scr=$?
+      # echo "$timeout_cmd"
+      # echo "$prev_scr :" $prev_scr
+    fi
+    # echo "$(get_date) '-' Screensaver exited." | AbFab_fn_RAINBOW_INC
+    AbFab_fn_DURATION
+    START=$SECONDS+$AbFab_SCREENSAVER_IDLE_TIME
+  done
 }
 
 if [ -f ~/scripts/.git_prompt.sh ]; then
@@ -412,9 +427,7 @@ __abfab() {
 TRAPALRM () {
   if [ $((SECONDS-START)) -ge $AbFab_SCREENSAVER_IDLE_TIME ]; then
     if [[ ! -v AbFab_SCREEN_SAVER_DISABLE && ! -v screen_saver_on ]]; then
-      #TODO Add timeout timer for screensaver to cycle to another screensaver
-      #TODO Add pre show screen saver option 
-      AbFab_fn_SCREENSAVER $AbFab_SCREENSAVER_SELECT  # randomly selects by default
+      AbFab_fn_SCREENSAVER $AbFab_SCREENSAVER_SELECT $AbFab_SCREENSAVER_TIMEOUT  # randomly selects by default
     fi
   else
     unset screen_saver_on

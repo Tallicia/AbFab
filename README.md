@@ -2,11 +2,11 @@
 
 ## Includes:
 <ul>
-<li>Realishtime (1s) prompt ppdate of git status, time, etc
-<li>ScreenSaver automatically runs after idle time
-<li>Animal Farm herding and randomization
-<li>
-<li> Smooth Gradient rainbow that maintains consistency
-<li> Process Execution Duration
-<li> Title Bar Integration
+<li> Realishtime (1s) prompt update of git Status, DateTime,  Animal Farming/Herding, Animations, etc
+<li> ScreenSaver automatically runs after idle time
+<li> ScreenSaver randomization and Timeout Cycling
+<li> Animal Farm herding, rotating, and randomization
+<li> Smooth Gradient Rainbow that maintains consistency
+<li> Process Execution Duration Calculation
+<li> Title Bar Integration with Pre & Post Execution
 </ul>

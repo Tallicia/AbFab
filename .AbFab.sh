@@ -24,12 +24,11 @@ export AbFab_LOLCAT_SEED=1
 export AbFab_LOLCAT_INCREMENT=2
 export AbFab_LOLCAT_FREQ=0.3
 export AbFab_PROMPT_COLOR='rainbow'
-export AbFab_ANIMAL_FRIENDS=7
-export AbFab_ANIMAL_FRIENDS_MIN=2
+export AbFab_ANIMAL_FRIENDS=7  # The Number of friends to show in prompt -1 for random
+export AbFab_ANIMAL_FRIENDS_MIN=2 
 export AbFab_ANIMAL_FRIENDS_MAX=14
 export AbFab_ANIMAL_HERD="false"
 export AbFab_ANIMAL_PARADE="rotate"  # none || rotate || random 
-# AbFab_ANIMAL_SET_FRIENDS 3
 export AbFab_ANIMAL_SELECT=0  # Set to 0 for random
 export AbFab_ANIMALS=🐒🦍🐕🐩🐈🐅🐆🐴🐎🦄🦓🦌🐂🐃🐄🐖🐗🐏🐑🐐🐪🐫🦙🦒🐘🦏🦛🐁🐀🐇🦔🦇🦘🦡🦃🐔🐓🐣🐤🐥🐦🐧🦅🦆🦢🦉🦚🦜🐊🐢🦎🐍🐲🐉🦕🦖🐳🐋🐬🐟🐠🐡🦈🐙🐚🦀🦞🦐🦑🐌🦋🐛🐜🐝🐞🦗🦂
 
@@ -86,15 +85,19 @@ AbFab_fn_ANIMAL() {
 }
 
 AbFab_fn_ANIMAL_FRIENDS_SET_NUM() {
-  if [[ $1 -gt $AbFab_ANIMAL_FRIENDS_MIN && $1 -le $AbFab_ANIMAL_FRIENDS_MAX ]]; then
+  echo $1
+  if [[ $1 -ge $AbFab_ANIMAL_FRIENDS_MIN && $1 -le $AbFab_ANIMAL_FRIENDS_MAX ]]; then
     AbFab_ANIMAL_FRIENDS=$1
   elif [[ $1 -le $AbFab_ANIMAL_FRIENDS_MIN ]]; then
     AbFab_ANIMAL_FRIENDS=$AbFab_ANIMAL_FRIENDS_MIN
   else
     AbFab_ANIMAL_FRIENDS=$AbFab_ANIMAL_FRIENDS_MAX
   fi
-  if [[ $1 -eq -1 ]]; then
-    AbFab_ANIMAL_FRIENDS=-1
+  if [[ $1 -le -1 ]]; then
+    lo=$AbFab_ANIMAL_FRIENDS_MIN
+    hi=$AbFab_ANIMAL_FRIENDS_MAX
+    AbFab_ANIMAL_FRIENDS=$(shuf -i $lo-$hi -n 1)
+    echo "Randomly Picked : $AbFab_ANIMAL_FRIENDS"
   fi
   export AbFab_ANIMAL_FRIENDS
   echo "AbFab_ANIMAL_FRIENDS: $AbFab_ANIMAL_FRIENDS "

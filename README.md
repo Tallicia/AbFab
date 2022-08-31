@@ -1,6 +1,6 @@
-# AbFab shell theme
+# AbFab shell prompt theme
 
-<p style='text-align: right;'> 
+<p style='text-align: right;'>
 By Tallicia 2022.08.31
 </p>
 

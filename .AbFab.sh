@@ -148,8 +148,10 @@ AbFab_fn_SHOW_ANIMAL_FRIENDS() {
       ((i++))
     done
   else
-    animal_friends=${animal_friends:1}
-    while [[ ${#animal_friends} -le $AbFab_ANIMAL_FRIENDS ]]; do
+    while [[ ${#animal_friends} -gt $AbFab_ANIMAL_FRIENDS ]]; do
+      animal_friends=${animal_friends:1}
+    done
+    while [[ ${#animal_friends} -lt $AbFab_ANIMAL_FRIENDS ]]; do
       animal_index=$((RANDOM % ${#AbFab_ANIMAL_ARRAY[@]}))
       animal_friends+=${AbFab_ANIMAL_ARRAY[$animal_index+1]}
     done

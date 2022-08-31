@@ -380,7 +380,7 @@ function get_animals_fwd() {
 
 precmd_functions+=('__prompt_command')
 # precmd_functions=('__prompt_command' "${precmd_functions[@]}")  # this is to prepend
-AbFab_COLORIZE='__abfab'
+AbFab_fn_COLORIZE='__abfab'
 
 __prompt_command() {
   __exit=$? # Save last exit code
@@ -406,12 +406,12 @@ __GREEN_LITERAL=$SOH$TERM_GREEN$STX
 PS1=$(get_prev_result)
 
 #Seperate Rainbow per section ( date, path, git, etc )
-# PS1+='$(eval "$AbFab_COLORIZE" <<<$(get_date))'
-# PS1+=' $(eval "$AbFab_COLORIZE" <<<"(\w)")'
-# PS1+=' $(eval "$AbFab_COLORIZE" <<<$(parse_git_set_info))'
+# PS1+='$(eval "$AbFab_fn_COLORIZE" <<<$(get_date))'
+# PS1+=' $(eval "$AbFab_fn_COLORIZE" <<<"(\w)")'
+# PS1+=' $(eval "$AbFab_fn_COLORIZE" <<<$(parse_git_set_info))'
 
 #Single Rainbow with blinking colons
-PS1+='$(eval "$AbFab_COLORIZE" <<< "$(get_animals_rev)$(get_date_blink_colon)$(get_animals_fwd)$(parse_git_set_info)($(print -P "%~"))!>")'
+PS1+='$(eval "$AbFab_fn_COLORIZE" <<< "$(get_animals_fwd)$(get_date_blink_colon)$(get_animals_rev)$(parse_git_set_info)($(print -P "%~"))!>")'
 
 __remove_newline() {
   tr -d '\n'

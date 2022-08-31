@@ -3,10 +3,10 @@
 #shellcheck disable=SC2016,SC1083,SC1090,SC2116,SC2154
 
 export AbFab_SCREENSAVER_SELECT=0
-export AbFab_SCREENSAVER_IDLE_TIME=25
-export AbFab_SCREENSAVER_NOTICE_TIME=2
+export AbFab_SCREENSAVER_IDLE_TIME=45
+export AbFab_SCREENSAVER_NOTICE_TIME=3
 # declare -a AbFab_SCREEN_SAVER_LIST
-export AbFab_SCREENSAVER_TIMEOUT=20
+export AbFab_SCREENSAVER_TIMEOUT=3600
 export AbFab_SCREEN_SAVER_LIST=("cmatrix -bu 4 -a | lolcat -F 0.00015" 
 "cmatrix -bu 4 -a | lolcat -F 0.0005" 
 "cmatrix -bu 4 -a" 
@@ -19,6 +19,7 @@ export AbFab_SCREEN_SAVER_PRESHOW_LIST=("sl -Fal | lolcat"
 
 export AbFab_EXEC_START_PREFIX='🏳️‍🌈'
 export AbFab_EXEC_END_PREFIX='🏁 '
+export AbFab_EXEC_DURATION_PRECISION=4
 export AbFab_LOLCAT_SEED=1
 export AbFab_LOLCAT_INCREMENT=2
 export AbFab_LOLCAT_FREQ=0.3
@@ -206,6 +207,7 @@ AbFab_fn_DURATION() {
   if [[ -v start_cmd && ! -v AbFab_RUN_DURATION_DISABLE ]]; then
     end_cmd=$(AbFab_fn_EXEC_TS)
     cmd_dur="$(bc <<<"$end_cmd-$start_cmd")"
+    printf -v cmd_dur "%.${AbFab_EXEC_DURATION_PRECISION}f" "$cmd_dur"
     # echo ${TERM_BLUE}"Duration: ${cmd_dur}"${TERM_DEFAULT} | AbFab_fn_RAINBOW_INC
     prev_hist=$HISTCMD && ((prev_hist-=1))
     prev=$(echo "${history[$prev_hist]}")
@@ -215,7 +217,7 @@ AbFab_fn_DURATION() {
     if [ "$__exit" -ne 0 ]; then
       done+="🚩"
     fi
-    done+="🏁 $prev_hist $prev Completed Duration: $cmd_dur"
+    done+="${cmd_dur}[$__exit]🏁${prev}🏁(${prev_hist})"
     AbFab_fn_TERM_TITLE "$done"
     unset start_cmd; unset end_cmd; unset cmd_dur
   fi
@@ -274,7 +276,6 @@ AbFab_fn_SCREENSAVER() {
     fi
     chosen=${AbFab_SCREEN_SAVER_LIST[$ind]}
     echo "$(get_date) Starting the chosen one: ${chosen}" | AbFab_fn_RAINBOW_INC
-    #sleep $AbFab_SCREENSAVER_NOTICE_TIME
     AbFab_fn_COUNTDOWN $AbFab_SCREENSAVER_NOTICE_TIME
     AbFab_fn_START_TITLE "$chosen"
     AbFab_fn_START_EXEC
@@ -282,16 +283,10 @@ AbFab_fn_SCREENSAVER() {
     if [[ "$timeout" -eq 0 ]]; then
       eval "$chosen"
     else
-      timeout_cmd="timeout $timeout"
-      timeout_cmd+="s"
-      timeout_cmd+=" $chosen"
-      # echo "$timeout_cmd"
+      timeout_cmd="timeout ${timeout}s $chosen"
       eval "$timeout_cmd"
       prev_scr=$?
-      # echo "$timeout_cmd"
-      # echo "$prev_scr :" $prev_scr
     fi
-    # echo "$(get_date) '-' Screensaver exited." | AbFab_fn_RAINBOW_INC
     AbFab_fn_DURATION
     START=$SECONDS+$AbFab_SCREENSAVER_IDLE_TIME
   done

@@ -30,7 +30,10 @@ export AbFab_ANIMAL_HERD="false"
 export AbFab_ANIMAL_PARADE="random"  # none || cycle || random 
 # AbFab_ANIMAL_SET_FRIENDS 3
 export AbFab_ANIMAL_SELECT=0  # Set to 0 for random
-export AbFab_ANIMALS=🐒🦍🐕🐩🐈🐅🐆🐴🐎🦄🦓🦌🐂🐃🐄🐖🐗🐏🐑🐐🐪🐫🦙🦒🐘🦏🦛🐁🐀🐇🐿🦔🦇🦘🦡🦃🐔🐓🐣🐤🐥🐦🐧🕊🦅🦆🦢🦉🦚🦜🐊🐢🦎🐍🐲🐉🦕🦖🐳🐋🐬🐟🐠🐡🦈🐙🐚🦀🦞🦐🦑🐌🦋🐛🐜🐝🐞🦗🕷🦂
+export AbFab_ANIMALS=🐒🦍🐕🐩🐈🐅🐆🐴🐎🦄🦓🦌🐂🐃🐄🐖🐗🐏🐑🐐🐪🐫🦙🦒🐘🦏🦛🐁🐀🐇🦔🦇🦘🦡🦃🐔🐓🐣🐤🐥🐦🐧🦅🦆🦢🦉🦚🦜🐊🐢🦎🐍🐲🐉🦕🦖🐳🐋🐬🐟🐠🐡🦈🐙🐚🦀🦞🦐🦑🐌🦋🐛🐜🐝🐞🦗🦂
+
+
+#🕊🐿🕷  # These had kerning issues with font need monospace emojis
 
 #🌈🏳️‍🌈
 
@@ -68,7 +71,8 @@ AbFab_ANIMAL_ARRAY=($(eval echo "$AbFab_ANIMALS" | sed "s/./& /g"))
 
 setopt promptsubst
 
-alias AbFab_SETTINGS='export | rg AbFab'
+alias AbFab_fn_SHOW_SETTINGS='export | rg AbFab'
+alias AbFab_fn_SHOW_SETTING_VALUES='env | rg AbFab'
 
 AbFab_fn_DEPENDENCY_LIST() {
   export AbFab_DEPENDENCIES=("coreutils" 

@@ -135,17 +135,23 @@ AbFab_fn_SHOW_ANIMAL_FRIENDS_HERD() {
 }
 
 AbFab_fn_SHOW_ANIMAL_FRIENDS() {
-  animal_friends=""
-  i=0
-  until [[ $i -ge $AbFab_ANIMAL_FRIENDS ]]; do
-    if [[ "$AbFab_ANIMAL_SELECT" = "0" ]]; then
-      animal_index=$((RANDOM % ${#AbFab_ANIMAL_ARRAY[@]}))
-      animal_friends+=${AbFab_ANIMAL_ARRAY[$animal_index+1]}
-    else
-      animal_friends+=${AbFab_ANIMAL_ARRAY[$AbFab_ANIMAL_SELECT]}
-    fi
-    ((i++))
-  done
+  if [[ "$AbFab_ANIMAL_PARADE" != "rotate" ]]; then
+    animal_friends=""
+    i=0
+    until [[ $i -ge $AbFab_ANIMAL_FRIENDS ]]; do
+      if [[ "$AbFab_ANIMAL_SELECT" = "0" ]]; then
+        animal_index=$((RANDOM % ${#AbFab_ANIMAL_ARRAY[@]}))
+        animal_friends+=${AbFab_ANIMAL_ARRAY[$animal_index+1]}
+      else
+        animal_friends+=${AbFab_ANIMAL_ARRAY[$AbFab_ANIMAL_SELECT]}
+      fi
+      ((i++))
+    done
+  else
+    animal_friends=${animal_friends:1}
+    animal_index=$((RANDOM % ${#AbFab_ANIMAL_ARRAY[@]}))
+    animal_friends+=${AbFab_ANIMAL_ARRAY[$animal_index+1]}
+  fi
   export animal_friends
 }
 
@@ -156,6 +162,12 @@ AbFab_fn_ANIMALS() {
     AbFab_fn_SHOW_ANIMAL_FRIENDS
     echo "$animal_friends"
   fi
+}
+
+ABFab_fn_rotate() {
+  animal_friends=${animal_friends:1}
+  animal_index=$((RANDOM % ${#AbFab_ANIMAL_ARRAY[@]}))
+  animal_friends+=${AbFab_ANIMAL_ARRAY[$animal_index+1]}
 }
 
 AbFab_fn_RAINBOW() {
@@ -432,9 +444,10 @@ TRAPALRM () {
       get_animals_fwd "" > /dev/null 2>&1  # |& /dev/null
     else
       if [[ "$AbFab_ANIMAL_PARADE" = "rotate" ]]; then
+        # echo "Rotating"
         #TODO add animal and remove
-        #ABFab_fn_rotate
-        echo "" > /dev/null 2>&1
+        ABFab_fn_rotate
+        #echo "" > /dev/null 2>&1
       fi
     fi
   fi

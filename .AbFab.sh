@@ -5,14 +5,13 @@
 export AbFab_SCREENSAVER_SELECT=0
 export AbFab_SCREENSAVER_IDLE_TIME=45
 export AbFab_SCREENSAVER_NOTICE_TIME=3
-# declare -a AbFab_SCREEN_SAVER_LIST
 export AbFab_SCREENSAVER_TIMEOUT=3600
+export AbFab_SCREEN_SAVER_DISABLE=false
 export AbFab_SCREEN_SAVER_LIST=("cmatrix -bu 4 -a | lolcat -F 0.00015" 
 "cmatrix -bu 4 -a | lolcat -F 0.0005" 
 "cmatrix -bu 4 -a" 
 "nyancat --frames 600" 
-"asciiquarium" )
-# "hollywood -s 6" )
+"asciiquarium" ) # "hollywood -s 6" )
 export AbFab_SCREEN_SAVER_PRESHOW_LIST=("sl -Fal | lolcat" 
 "sl -al | lolcat" 
 "nyancat --frames 100" )  # randomize the Fal 0..8 -3 bits THis is also only a preexec option it does not loop
@@ -20,6 +19,7 @@ export AbFab_SCREEN_SAVER_PRESHOW_LIST=("sl -Fal | lolcat"
 export AbFab_EXEC_START_PREFIX='🏳️‍🌈'
 export AbFab_EXEC_END_PREFIX='🏁 '
 export AbFab_EXEC_DURATION_PRECISION=4
+export AbFab_RUN_DURATION_DISABLE=false
 export AbFab_LOLCAT_SEED=1
 export AbFab_LOLCAT_INCREMENT=2
 export AbFab_LOLCAT_FREQ=0.3
@@ -53,27 +53,16 @@ export AbFab_ANIMALS=🐒🦍🐕🐩🐈🐅🐆🐴🐎🦄🦓🦌🐂🐃�
 # 🐌🦋🐛🐜🐝🐞🦗🕷🦂
 # 🦟🦠
 # 🕸🐾🐚
-
 # 🦄🦚🦜
-
 #😀😁😂😃😄😅😆😉😊😋😎😍😘😗😙😚☺🙂😐😑😶😏😣😥😮😯😪😫😴😌😛😜😝😒😓😔😕😲☹🙁😖😞😟😤😢😭😦😧😨😩😬😰😱😳🤪😵😡😠😷😇😈👿💀💩😺😸😹😻😼😽🙀😿😾👨👩👴👵👌👍🤛🏻🤛🏼🤛🏽🤛🏾🤛🏿🤜🏻🤜🏼🤜🏽🤜🏾🤜🏿💦🕶🐵🐒🐶🐺🐱🐯🐴🐮🐷🐭🐹🐰🐻🐨🐼🐥🐸🐍🐲🍜🌚🌛🌜🌝🌞🌬🎃♥🎵💡📄🏁🚩🏳️‍🌈🏳🏴
-
 #🌿🌽🌶🍞🍟🍕🍲🍚🍜☕🔪
-
-#export AbFab_SCREEN_SAVER_DISABLE=true # This turns off the terminal screensaver
-#unset AbFab_SCREEN_SAVER_DISABLE  # This resumes screen saver timeout 
-
-#export AbFab_RUN_DURATION_DISABLE=true # This turns off the duration feature
-#unset AbFab_RUN_DURATION_DISABLE  # This resumes duration feature
 
 AbFab_ANIMAL_ARRAY=($(eval echo "$AbFab_ANIMALS" | sed "s/./& /g"))
 # mapfile -t AbFab_ANIMAL_ARRAY < <($AbFab_ANIMALS)
 # animal_emoji=${AbFab_ANIMAL_ARRAY[$AbFab_ANIMAL_SELECT]}
 
 setopt promptsubst
-
-alias AbFab_fn_SHOW_SETTINGS='export | rg AbFab'
-alias AbFab_fn_SHOW_SETTING_VALUES='env | rg AbFab'
+alias AbFab-SHOW_SETTINGS='export | rg AbFab'
 
 AbFab_fn_DEPENDENCY_LIST() {
   export AbFab_DEPENDENCIES=("coreutils" 
@@ -134,7 +123,7 @@ AbFab_fn_SHOW_ANIMAL_FRIENDS_HERD() {
   echo "$animal_friends"
 }
 
-AbFab_fn_SHOW_ANIMAL_FRIENDS() {
+AbFab_fn_GEN_ANIMAL_FRIENDS() {
   if [[ "$AbFab_ANIMAL_PARADE" != "rotate" ]]; then
     animal_friends=""
     i=0
@@ -163,7 +152,7 @@ AbFab_fn_ANIMALS() {
   if [[ "$AbFab_ANIMAL_HERD" = "true" ]]; then
     AbFab_fn_SHOW_ANIMAL_FRIENDS_HERD "$@"
   else
-    AbFab_fn_SHOW_ANIMAL_FRIENDS
+    AbFab_fn_GEN_ANIMAL_FRIENDS
     echo "$animal_friends"
   fi
 }
@@ -385,7 +374,7 @@ AbFab_fn_COLORIZE='__abfab'
 __prompt_command() {
   __exit=$? # Save last exit code
   AbFab_fn_DURATION
-  AbFab_fn_SHOW_ANIMAL_FRIENDS
+  AbFab_fn_GEN_ANIMAL_FRIENDS
   ((AbFab_LOLCAT_SEED += AbFab_LOLCAT_INCREMENT))
   START=$SECONDS
 }
@@ -402,7 +391,6 @@ __DEFAULT_LITERAL=$SOH$TERM_DEFAULT$STX
 __RED_LITERAL=$SOH$TERM_RED$STX
 __GREEN_LITERAL=$SOH$TERM_GREEN$STX
 
-#__HISTORY_NUMBER=$(print -P '%!')
 PS1=$(get_prev_result)
 
 #Seperate Rainbow per section ( date, path, git, etc )
@@ -419,7 +407,6 @@ __remove_newline() {
 __color_wrap_non_printing() {
   local REGEX=$ESC'\[[[:digit:];]*m'
   local REPLACE=$SOH'&'$STX
-#   local REPLACE=%{$SOH&$STX%}
   sed "s/$REGEX/$REPLACE/g"
 }
 

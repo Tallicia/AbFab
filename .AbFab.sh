@@ -124,6 +124,7 @@ AbFab_fn_SHOW_ANIMAL_FRIENDS_HERD() {
     fi
     ((i++))
   done
+  export animal_friends
   echo "$animal_friends"
 }
 
@@ -142,7 +143,7 @@ AbFab_fn_SHOW_ANIMAL_FRIENDS() {
   export animal_friends
 }
 
-AbFab_fn_PS1_ANIMALS() {
+AbFab_fn_ANIMALS() {
   if [[ "$AbFab_ANIMAL_HERD" = "true" ]]; then
     AbFab_fn_SHOW_ANIMAL_FRIENDS_HERD "$@"
   else
@@ -157,7 +158,7 @@ AbFab_fn_RAINBOW() {
 
 AbFab_fn_COLOR() {  #TODO:This needs to be completed, single color prompt not working
   if [[ "$1" != "" ]]; then
-    echo '%{$fg['$1']%}'
+    echo '%{$fg['"$1"']%}'
   else
     echo '%{$fg[$AbFab_PROMPT_COLOR]%}'
   fi
@@ -206,7 +207,7 @@ AbFab_fn_DURATION() {
     fin=$(echo "$AbFab_EXEC_END_PREFIX" "$(get_date_blink_colon)" Duration "$cmd_dur" - "$prev" | AbFab_fn_RAINBOW_INC )
     echo "$fin"
     done=""
-    if [ "$PS1_exit" -ne 0 ]; then
+    if [ "$__exit" -ne 0 ]; then
       done+="🚩"
     fi
     done+="🏁 $prev_hist $prev Completed Duration: $cmd_dur"
@@ -316,16 +317,16 @@ function get_date_blink_colon() {
 }
 
 function get_prev_result() {
-  pr=$PS1_DEFAULT_LITERAL
+  pr=$__DEFAULT_LITERAL
   pr+='['
   pr+='$('
-  pr+='if [ "$PS1_exit" -eq 0 ]; then '
-  pr+="echo '$PS1_GREEN_LITERAL'; "
+  pr+='if [ "$__exit" -eq 0 ]; then '
+  pr+="echo '$__GREEN_LITERAL'; "
   pr+='else '
-  pr+="echo '$PS1_RED_LITERAL'; fi"
+  pr+="echo '$__RED_LITERAL'; fi"
   pr+=')'
-  pr+='$PS1_exit'
-  pr+=$PS1_DEFAULT_LITERAL
+  pr+='$__exit'
+  pr+=$__DEFAULT_LITERAL
   pr+='] '
   echo "$pr"
 }
@@ -343,7 +344,7 @@ precmd_functions+=('__prompt_command')
 AbFab_COLORIZE='__abfab'
 
 __prompt_command() {
-  PS1_exit=$? # Save last exit code
+  __exit=$? # Save last exit code
   AbFab_fn_DURATION
   AbFab_fn_SHOW_ANIMAL_FRIENDS
   ((AbFab_LOLCAT_SEED += AbFab_LOLCAT_INCREMENT))
@@ -358,11 +359,11 @@ ESC=$'\033'
 SOH=%{
 STX=%}
 
-PS1_DEFAULT_LITERAL=$SOH$TERM_DEFAULT$STX
-PS1_RED_LITERAL=$SOH$TERM_RED$STX
-PS1_GREEN_LITERAL=$SOH$TERM_GREEN$STX
+__DEFAULT_LITERAL=$SOH$TERM_DEFAULT$STX
+__RED_LITERAL=$SOH$TERM_RED$STX
+__GREEN_LITERAL=$SOH$TERM_GREEN$STX
 
-#PS1_HISTORY_NUMBER=$(print -P '%!')
+#__HISTORY_NUMBER=$(print -P '%!')
 PS1=$(get_prev_result)
 
 #Seperate Rainbow per section ( date, path, git, etc )
@@ -371,7 +372,7 @@ PS1=$(get_prev_result)
 # PS1+=' $(eval "$AbFab_COLORIZE" <<<$(parse_git_set_info))'
 
 #Single Rainbow with blinking colons
-PS1+='$(eval "$AbFab_COLORIZE" <<< "$(AbFab_fn_PS1_ANIMALS | rev)$(get_date_blink_colon)$(AbFab_fn_PS1_ANIMALS)$(parse_git_set_info)($(print -P "%~"))!>")'
+PS1+='$(eval "$AbFab_COLORIZE" <<< "$(AbFab_fn_ANIMALS | rev)$(get_date_blink_colon)$(AbFab_fn_ANIMALS)$(parse_git_set_info)($(print -P "%~"))!>")'
 
 __remove_newline() {
   tr -d '\n'
@@ -395,13 +396,11 @@ __abfab() {
   fi
 }
 
-__ps1_escape_percent() {
-  sed 's/%/%&/g'
-}
-
 TRAPALRM () {
   if [ $((SECONDS-START)) -ge $AbFab_SCREENSAVER_IDLE_TIME ]; then
     if [[ ! -v AbFab_SCREEN_SAVER_DISABLE && ! -v screen_saver_on ]]; then
+      #TODO Add timeout timer for screensaver to cycle to another screensaver
+      #TODO Add pre show screen saver option 
       AbFab_fn_SCREENSAVER $AbFab_SCREENSAVER_SELECT  # randomly selects by default
     fi
   else

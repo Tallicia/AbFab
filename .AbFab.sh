@@ -32,11 +32,8 @@ export AbFab_ANIMAL_PARADE="rotate"  # none || rotate || random
 export AbFab_ANIMAL_SELECT=0  # Set to 0 for random
 export AbFab_ANIMALS=🐒🦍🐕🐩🐈🐅🐆🐴🐎🦄🦓🦌🐂🐃🐄🐖🐗🐏🐑🐐🐪🐫🦙🦒🐘🦏🦛🐁🐀🐇🦔🦇🦘🦡🦃🐔🐓🐣🐤🐥🐦🐧🦅🦆🦢🦉🦚🦜🐊🐢🦎🐍🐲🐉🦕🦖🐳🐋🐬🐟🐠🐡🦈🐙🐚🦀🦞🦐🦑🐌🦋🐛🐜🐝🐞🦗🦂
 
-
 #🕊🐿🕷  # These had kerning issues with font need monospace emojis
-
 #🌈🏳️‍🌈
-
 # 🤑👹☠️
 # 😺😸😹😻😼😽🙀😿😾
 # 🙈🙉🙊🐵🐽
@@ -58,7 +55,6 @@ export AbFab_ANIMALS=🐒🦍🐕🐩🐈🐅🐆🐴🐎🦄🦓🦌🐂🐃�
 
 AbFab_ANIMAL_ARRAY=($(eval echo "$AbFab_ANIMALS" | sed "s/./& /g"))
 # mapfile -t AbFab_ANIMAL_ARRAY < <($AbFab_ANIMALS)
-# animal_emoji=${AbFab_ANIMAL_ARRAY[$AbFab_ANIMAL_SELECT]}
 
 setopt promptsubst
 alias AbFab-SHOW_SETTINGS='export | rg AbFab'
@@ -85,7 +81,6 @@ AbFab_fn_ANIMAL() {
 }
 
 AbFab_fn_ANIMAL_FRIENDS_SET_NUM() {
-  echo $1
   if [[ $1 -ge $AbFab_ANIMAL_FRIENDS_MIN && $1 -le $AbFab_ANIMAL_FRIENDS_MAX ]]; then
     AbFab_ANIMAL_FRIENDS=$1
   elif [[ $1 -le $AbFab_ANIMAL_FRIENDS_MIN ]]; then
@@ -100,7 +95,6 @@ AbFab_fn_ANIMAL_FRIENDS_SET_NUM() {
     echo "Randomly Picked : $AbFab_ANIMAL_FRIENDS"
   fi
   export AbFab_ANIMAL_FRIENDS
-  echo "AbFab_ANIMAL_FRIENDS: $AbFab_ANIMAL_FRIENDS "
 }
 
 AbFab_fn_SHOW_ANIMAL_FRIENDS_HERD() {

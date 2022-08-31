@@ -24,11 +24,11 @@ export AbFab_LOLCAT_SEED=1
 export AbFab_LOLCAT_INCREMENT=2
 export AbFab_LOLCAT_FREQ=0.3
 export AbFab_PROMPT_COLOR='rainbow'
-export AbFab_ANIMAL_FRIENDS=5
+export AbFab_ANIMAL_FRIENDS=7
 export AbFab_ANIMAL_FRIENDS_MIN=2
 export AbFab_ANIMAL_FRIENDS_MAX=14
 export AbFab_ANIMAL_HERD="false"
-export AbFab_ANIMAL_PARADE="random"  # none || cycle || random 
+export AbFab_ANIMAL_PARADE="rotate"  # none || rotate || random 
 # AbFab_ANIMAL_SET_FRIENDS 3
 export AbFab_ANIMAL_SELECT=0  # Set to 0 for random
 export AbFab_ANIMALS=🐒🦍🐕🐩🐈🐅🐆🐴🐎🦄🦓🦌🐂🐃🐄🐖🐗🐏🐑🐐🐪🐫🦙🦒🐘🦏🦛🐁🐀🐇🦔🦇🦘🦡🦃🐔🐓🐣🐤🐥🐦🐧🦅🦆🦢🦉🦚🦜🐊🐢🦎🐍🐲🐉🦕🦖🐳🐋🐬🐟🐠🐡🦈🐙🐚🦀🦞🦐🦑🐌🦋🐛🐜🐝🐞🦗🦂
@@ -149,8 +149,10 @@ AbFab_fn_SHOW_ANIMAL_FRIENDS() {
     done
   else
     animal_friends=${animal_friends:1}
-    animal_index=$((RANDOM % ${#AbFab_ANIMAL_ARRAY[@]}))
-    animal_friends+=${AbFab_ANIMAL_ARRAY[$animal_index+1]}
+    while [[ ${#animal_friends} -le $AbFab_ANIMAL_FRIENDS ]]; do
+      animal_index=$((RANDOM % ${#AbFab_ANIMAL_ARRAY[@]}))
+      animal_friends+=${AbFab_ANIMAL_ARRAY[$animal_index+1]}
+    done
   fi
   export animal_friends
 }
@@ -427,7 +429,7 @@ __abfab() {
   if [[ "$AbFab_PROMPT_COLOR" = "rainbow" ]]; then
     AbFab_fn_RAINBOW | __color_wrap_non_printing 
   else 
-    AbFab_COLOR $AbFab_PROMPT_COLOR | __color_wrap_non_printing
+    AbFab_fn_COLOR $AbFab_PROMPT_COLOR | __color_wrap_non_printing
   fi
 }
 
@@ -444,10 +446,7 @@ TRAPALRM () {
       get_animals_fwd "" > /dev/null 2>&1  # |& /dev/null
     else
       if [[ "$AbFab_ANIMAL_PARADE" = "rotate" ]]; then
-        # echo "Rotating"
-        #TODO add animal and remove
         ABFab_fn_rotate
-        #echo "" > /dev/null 2>&1
       fi
     fi
   fi

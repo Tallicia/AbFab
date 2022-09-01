@@ -1,8 +1,8 @@
 #!/bin/bash
 export AbFab_SCREENSAVER_SELECT=0
 export AbFab_SCREENSAVER_IDLE_TIME=45
-export AbFab_SCREENSAVER_NOTICE_TIME=3
-export AbFab_SCREENSAVER_TIMEOUT=3600
+export AbFab_SCREENSAVER_NOTICE_TIME=4
+export AbFab_SCREENSAVER_TIMEOUT=60
 export AbFab_SCREEN_SAVER_DISABLE=false
 export AbFab_SCREEN_SAVER_LIST=("cmatrix -bu 4 -a | lolcat -F 0.00015" 
 "cmatrix -bu 4 -a | lolcat -F 0.0005" 

@@ -194,7 +194,7 @@ __abfab() {
 
 TRAPALRM () {
   if [ $((SECONDS-START)) -ge "$AbFab_SCREENSAVER_IDLE_TIME" ]; then
-    if [[ ! -v AbFab_SCREEN_SAVER_DISABLE && ! -v screen_saver_on ]]; then
+    if [[ "$AbFab_SCREEN_SAVER_DISABLE" != "true" && ! -v screen_saver_on ]]; then
       AbFab_fn_SCREENSAVER "$AbFab_SCREENSAVER_SELECT" "$AbFab_SCREENSAVER_TIMEOUT"  # randomly selects by default
     fi
   else

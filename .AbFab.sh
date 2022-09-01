@@ -46,7 +46,6 @@ __prev_cmd() {
 
 AbFab_fn_DURATION() {
   if [[ -v start_cmd && "$AbFab_RUN_DURATION_DISABLE" != "true" ]]; then
-    echo "Enter"
     end_cmd=$(AbFab_fn_EXEC_TS)
     cmd_dur="$(bc <<<"$end_cmd-$start_cmd")"
     printf -v cmd_dur "%.${AbFab_EXEC_DURATION_PRECISION}f" "$cmd_dur"

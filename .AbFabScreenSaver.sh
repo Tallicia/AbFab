@@ -7,11 +7,13 @@ export AbFab_SCREEN_SAVER_DISABLE=false
 export AbFab_SCREEN_SAVER_LIST=("cmatrix -bu 4 -a | lolcat -F 0.00015" 
 "cmatrix -bu 4 -a | lolcat -F 0.0005" 
 "cmatrix -bu 4 -a" 
-"nyancat --frames 600" 
-"asciiquarium" ) # "hollywood -s 6" )
+"nyancat" 
+"htop" 
+"asciiquarium" ) # "hollywood -s 6" )  #hollywood too much for macos
 export AbFab_SCREEN_SAVER_PRESHOW_LIST=("sl -Fal | lolcat" 
 "sl -al | lolcat" 
-"nyancat --frames 100" )  # randomize the Fal 0..8 -3 bits THis is also only a preexec option it does not loop
+"nyancat --frames 100" 
+"duf" )  # randomize the Fal 0..8 -3 bits
 
 AbFab_fn_SCREENSAVER() {
   prev_scr=124

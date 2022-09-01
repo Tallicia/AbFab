@@ -58,7 +58,7 @@ AbFab_fn_DURATION() {
     if [ "$__exit" -ne 0 ]; then
       done+="🚩"
     fi
-    done+="${cmd_dur}[$__exit]🏁${prev}🏁(${prev_hist})"
+    done+="${cmd_dur}s[$__exit]🏁${prev}🏁(${prev_hist})"
     AbFab_fn_TERM_TITLE "$done"
     unset start_cmd; unset end_cmd; unset cmd_dur
   fi
@@ -80,7 +80,7 @@ AbFab_fn_TERM_TITLE() { printf "\033]0;%s\007" "$*"; }
 AbFab_fn_START_TITLE() {
   cmd=""
   if [[ "$1" != "" ]]; then
-   cmd=$1
+    cmd=$1
   else
     cmd_hist=$HISTCMD && ((prev_hist-=1))
     cmd=$(echo "${history[$cmd_hist]}")

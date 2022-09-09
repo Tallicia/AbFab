@@ -1,15 +1,18 @@
 #!/bin/bash
 export AbFab_SCREENSAVER_SELECT=0
-export AbFab_SCREENSAVER_IDLE_TIME=45
-export AbFab_SCREENSAVER_NOTICE_TIME=4
-export AbFab_SCREENSAVER_TIMEOUT=60
+export AbFab_SCREENSAVER_IDLE_TIME=100
+export AbFab_SCREENSAVER_NOTICE_TIME=8
+export AbFab_SCREENSAVER_TIMEOUT=90
 export AbFab_SCREEN_SAVER_DISABLE=false
 export AbFab_SCREEN_SAVER_LIST=("cmatrix -bu 4 -a | lolcat -F 0.00015" 
 "cmatrix -bu 4 -a | lolcat -F 0.0005" 
 "cmatrix -bu 4 -a" 
 "nyancat" 
 "htop" 
-"asciiquarium" ) # "hollywood -s 6" )  #hollywood too much for macos
+"cbonsai" 
+"pipes.sh" 
+"asciiquarium" 
+"bashtop" ) # "hollywood -s 6" )  #hollywood too much for macos
 export AbFab_SCREEN_SAVER_PRESHOW_LIST=("sl -Fal | lolcat" 
 "sl -al | lolcat" 
 "nyancat --frames 100" 
@@ -34,7 +37,7 @@ AbFab_fn_SCREENSAVER() {
     if [[ "$timeout" -eq 0 ]]; then
       eval "$chosen"
     else
-      timeout_cmd="timeout ${timeout}s $chosen"
+      timeout_cmd="timeout --signal INT ${timeout}s $chosen"
       eval "$timeout_cmd"
       prev_scr=$?
     fi

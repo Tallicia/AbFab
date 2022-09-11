@@ -11,7 +11,7 @@ export AbFab_SCREEN_SAVER_LIST=("cmatrix -bu 4 -a | lolcat -F 0.00015"
 "bashtop" 
 "neofetch"
 "htop" 
-"cbonsai --life=$((RANDOM % 200 + 1)) --message=\"$(fortune)\" --save=~/.AbFab_bonsai_state --load=~/.AbFab_bonsai_state --time=0.01 --live --infinite --multiplier=$((RANDOM % 20 + 1)) --base=$((RANDOM % 25 + 1))"
+"cbonsai --life=$((RANDOM % 200 + 1)) --message=\"$(fortune)\" --save=~/.AbFab_bonsai_state --load=~/.AbFab_bonsai_state --time=0.01 --live --infinite --multiplier=$((RANDOM % 20 + 1)) --base=$((RANDOM % 3 + 1))"
 "pipes.sh" 
 "asciiquarium" ) # "hollywood -s 6" )  #hollywood too much for macos
 export AbFab_SCREEN_SAVER_PRESHOW_LIST=("sl -Fal | lolcat" 
